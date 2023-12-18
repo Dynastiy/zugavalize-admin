@@ -1,0 +1,30 @@
+name: Deploy Site on push
+on:
+  push:
+    branches:
+      - master
+jobs:
+  web-deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+
+      # - name: 🔨 Build Project
+      #   run: |
+      #     npm install
+      #     npm run build
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.GIT_FTP_ZUGA_SERVER }}
+          username: ${{ secrets.GIT_FTP_ZUGA_USERNAME }}
+          password: ${{ secrets.GIT_FTP_ZUGA_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: admin.zugavalize.io/
